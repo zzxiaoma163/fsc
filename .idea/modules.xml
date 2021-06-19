@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/fscclient/fscclient.iml" filepath="$PROJECT_DIR$/fscclient/fscclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fscmonitor/fscmonitor.iml" filepath="$PROJECT_DIR$/fscmonitor/fscmonitor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fscserver/fscserver.iml" filepath="$PROJECT_DIR$/fscserver/fscserver.iml" />
+    </modules>
+  </component>
+</project>
