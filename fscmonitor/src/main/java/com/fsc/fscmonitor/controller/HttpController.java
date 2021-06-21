@@ -18,10 +18,16 @@ public class HttpController {
     private Logger log = Logger.getLogger(HttpController.class);
 
     @RequestMapping(uri = "/createfileall")
-    public GeneralResponse createfileall() {
+    public GeneralResponse createfileall(@RequestBody Map<String,String> params) {
+        String path = "";
+        if(params!=null){
+            if(params.get("fold")!=null){
+                path = params.get("fold").toString();
+            }
+        }
         //生成文件
         List<File> filelist = new ArrayList<>();
-        List<File> list = FileOper.getFileList(PropertiesUtils.getStringValue(Content.MONITOR_ADDRESS), filelist);
+        List<File> list = FileOper.getFileList(PropertiesUtils.getStringValue(Content.MONITOR_ADDRESS)+File.separator+path, filelist);
         File file = new File(PropertiesUtils.getStringValue(Content.ADDRESS) + Content.FILEDATE);
         if (file.exists()) {
             file.delete();
