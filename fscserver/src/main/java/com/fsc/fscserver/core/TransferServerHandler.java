@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -104,7 +105,7 @@ public class TransferServerHandler extends ChannelInboundHandlerAdapter {
 						backfiles.mkdirs();
 					}
 					File backfile = new File(backpath + File.separator + ef.getName());
-					Files.copy(file.toPath(), backfile.toPath());
+					Files.copy(file.toPath(), backfile.toPath(),StandardCopyOption.COPY_ATTRIBUTES,StandardCopyOption.REPLACE_EXISTING);
 					boolean b = file.delete();
 					if (!b) {
 						log.error("del file error:" + path);
