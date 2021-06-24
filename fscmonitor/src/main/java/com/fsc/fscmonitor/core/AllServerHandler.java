@@ -16,7 +16,6 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 
 
@@ -27,7 +26,7 @@ public class AllServerHandler extends SimpleChannelInboundHandler<FullHttpReques
             .getLogger(AllServerHandler.class);
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws UnsupportedEncodingException {
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) {
         FullHttpResponse response = null;
         Gson gson = new Gson();
         if (fullHttpRequest.method() != HttpMethod.POST) {

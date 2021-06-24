@@ -3,7 +3,7 @@ package com.fsc.fscmonitor.enums;
 public class Content {
     public final static String MONITOR_ADDRESS = "monitor.monitoraddress";
     public final static String ADDRESS = "monitor.address";
-    public final static String FILEDATE = "20000101";
+    public final static String FILEDATE = "20000101000000";
     public final static String PORT = "monitor.port";
     public final static String URLSPLIT = "?";
     public final static String JSONMAP = "jsonmap";
@@ -17,4 +17,5 @@ public class Content {
     public final static String ONDELETE = "monitor.ondelete";
     public final static String AUTHOR = "monitor.author";
     public final static String BASIC = "Basic ";
+    public final static String CREATEFILE_TIME = "monitor.createfile.time";
 }

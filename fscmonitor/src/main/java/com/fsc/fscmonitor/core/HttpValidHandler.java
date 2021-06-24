@@ -5,7 +5,6 @@ import com.fsc.fscmonitor.enums.ResultCode;
 import com.fsc.fscmonitor.model.GeneralResponse;
 import com.fsc.fscmonitor.util.PropertiesUtils;
 import com.google.gson.Gson;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -23,16 +22,14 @@ public class HttpValidHandler extends SimpleChannelInboundHandler<FullHttpReques
         super(false);
     }
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) {
         String author = msg.headers().get("Authorization");
         if(author!=null&&author.equals(Content.BASIC+ PropertiesUtils.getStringValue(Content.AUTHOR))){
             ctx.fireChannelRead(msg);
         }else{
-            FullHttpResponse response = null;
             Gson gson = new Gson();
             GeneralResponse generalResponse = new GeneralResponse(ResultCode.NOVALID.getCode(),ResultCode.NOVALID.getName());
-            ByteBuf buf = copiedBuffer(gson.toJson(generalResponse), CharsetUtil.UTF_8);
-            response = HttpResponseUtil.responseOK(HttpResponseStatus.OK, buf);
+            FullHttpResponse response = HttpResponseUtil.responseOK(HttpResponseStatus.OK, copiedBuffer(gson.toJson(generalResponse), CharsetUtil.UTF_8));
             ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
         }
     }

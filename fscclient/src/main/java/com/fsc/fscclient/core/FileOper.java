@@ -11,26 +11,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 
 public class FileOper {
     private static Logger logger = LoggerFactory.getLogger(FileOper.class);
+    private static SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
     private static String address = PropertiesUtils.getStringValue(Content.ADDRESS);
     private static String server_ip = PropertiesUtils.getStringValue(Content.SERVER_IP);
     private static String montior_address = PropertiesUtils.getStringValue(Content.MONITOR_ADDRESS);
     private static int port = PropertiesUtils.getIntValue(Content.PORT);
+    private static int time = PropertiesUtils.getIntValue(Content.MINUTE);
     public static void read() throws IOException {
         BufferedReader br = null;
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        String min = format.format(new Date());
         List<String> filelist = new ArrayList<>();
 
         File file = new File(address);
         String[] fileNameLists = file.list();
         for (String s : fileNameLists) {
-            if (s.compareTo(min) < 0) {
+            if ( diff(s) >= time) {
                 filelist.add(s);
             }
         }
@@ -106,11 +107,19 @@ public class FileOper {
         ft.setFilepath(str.substring(str.lastIndexOf("---") + 3, str.length()));
         return ft;
     }
-
+    public static long diff(String fileday) {
+        //diff minute
+        long diff = 0;
+        try {
+            diff = (System.currentTimeMillis() - format.parse(fileday).getTime())/1000/60;
+        } catch (ParseException e) {
+            logger.error(e.getMessage());
+        }
+        return diff;
+    }
     private static void sendFile(FileText files){
 
         TransFile tf = new TransFile();
-
         File tfile = new File(files.getFilepath());
         String fileName = tfile.getName();
         tf.setName(fileName);

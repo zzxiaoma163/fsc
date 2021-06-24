@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,16 +17,39 @@ import java.util.List;
 
 public class FileOper {
     private static Logger logger = LoggerFactory.getLogger(FileOper.class);
+    private static SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
     private static String address = PropertiesUtils.getStringValue(Content.ADDRESS);
-
+    private static int time = PropertiesUtils.getIntValue(Content.CREATEFILE_TIME);
+    private static String mintime = "20000101000000";
+    //get log min name
+    static{
+        File file = new File(address);
+        String[] fileNameLists = file.list();
+        for (int i=0;i<fileNameLists.length;i++) {
+            if(i==0){
+                mintime = fileNameLists[i];
+            }
+            if (fileNameLists[i].compareTo(mintime) < 0) {
+                mintime = fileNameLists[i];
+            }
+        }
+    }
     public static void write(String msg) {
-        BufferedWriter bw = null;
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-        String day = df.format(new Date());
-        write(msg, day);
+        //diff minute
+        long diff = 0;
+        try {
+            diff = (System.currentTimeMillis() - df.parse(mintime).getTime())/1000/60;
+        } catch (ParseException e) {
+            logger.error(e.getMessage());
+        }
+        String day = mintime;
+        if(diff >= time){
+            day = df.format(new Date());
+        }
+        write( msg, day);
     }
 
-    public static void write(String msg, String day) {
+    public static void write(String msg,String day){
         BufferedWriter bw = null;
         try {
             File dir = new File(address);
@@ -41,11 +65,12 @@ public class FileOper {
             }
             bw = new BufferedWriter(new FileWriter(address + day, true));
             bw.write(msg);
-        } catch (IOException e) {
+        } catch (IOException  e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         } finally {
             try {
+                mintime = day;
                 if (bw != null) {
                     bw.close();
                 }
@@ -54,6 +79,7 @@ public class FileOper {
             }
         }
     }
+
 
     public static List<File> getFileList(String strPath, List<File> filelist) {
         File dir = new File(strPath);
